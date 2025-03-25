@@ -1,4 +1,4 @@
-# Analisis de calidad del Agua con IS
+# Analisis de calidad del Agua con IA
 
 Agente que utiliza Inteligencia Artificial para analizar la calidad del agua de tu localidad
 

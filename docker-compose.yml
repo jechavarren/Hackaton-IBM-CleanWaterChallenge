@@ -3,7 +3,7 @@ services:
     agent:
         build:
           context: ./agent
-        image: agentesauregistry.azurecr.io/agentesau-agent:latest
+        image: registry/agent:latest
         container_name: agent
         depends_on:
             - phoenix
@@ -26,7 +26,7 @@ services:
     front:
         build:
           context: ./front
-        image: agentesauregistry.azurecr.io/agentesau-front:latest
+        image: registry/front:latest
         container_name: front
         depends_on:
             - agent
@@ -57,20 +57,3 @@ services:
             POSTGRES_DB: phoenix
         ports:
             - 5432:5432
-
-    nginx:
-        build:
-          context: ./nginx
-        image: agentesauregistry.azurecr.io/agentesau-nginx:latest
-        container_name: nginx
-        restart: always
-        ports:
-            - 8888:80
-            - 443:443
-        depends_on:
-            - phoenix
-            - front
-        environment:
-            FRONTEND_SERVER: ${FRONTEND_SERVER}
-            BACKEND_SERVER: ${BACKEND_SERVER}
-            PHOENIX_URI: ${PHOENIX_URI}
