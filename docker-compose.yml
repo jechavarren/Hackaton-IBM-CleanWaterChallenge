@@ -1,0 +1,76 @@
+services:
+
+    agent:
+        build:
+          context: ./agent
+        image: agentesauregistry.azurecr.io/agentesau-agent:latest
+        container_name: agent
+        depends_on:
+            - phoenix
+        restart: always
+        ports:
+            - 8000:8000
+        volumes:
+            - ./agent:/agent
+        environment:
+            PHOENIX_URI: ${PHOENIX_URI}
+            OPENAI_API_TYPE: ${OPENAI_API_TYPE}
+            AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
+            AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
+            OPENAI_API_VERSION: ${OPENAI_API_VERSION}
+            OPENAI_API_LLM_MODEL_35: ${OPENAI_API_LLM_MODEL_35}
+            OPENAI_API_LLM_MODEL_4: ${OPENAI_API_LLM_MODEL_4}
+            OPENAI_API_EMB_MODEL: ${OPENAI_API_EMB_MODEL}
+            WORKERS: ${WORKERS}
+
+    front:
+        build:
+          context: ./front
+        image: agentesauregistry.azurecr.io/agentesau-front:latest
+        container_name: front
+        depends_on:
+            - agent
+        restart: always
+        ports:
+            - 8002:8002
+        environment:
+            BACKEND_SERVER: ${BACKEND_SERVER}
+
+    phoenix:
+        image: arizephoenix/phoenix:version-4.4.3
+#        image: arizephoenix/phoenix:sha256:02fcf1190b8e0dd1d415d8bb6e2adb19bb98060b1709143ca60e8dc329bbd937
+        container_name: phoenix
+        restart: always
+        ports:
+            - 6006:6006
+            - 9090:9090
+        environment:
+            PHOENIX_SQL_DATABASE_URL: ${PHOENIX_SQL_DATABASE_URL}
+
+    db:
+        image: postgres
+        restart: always
+        container_name: db
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: phoenix
+        ports:
+            - 5432:5432
+
+    nginx:
+        build:
+          context: ./nginx
+        image: agentesauregistry.azurecr.io/agentesau-nginx:latest
+        container_name: nginx
+        restart: always
+        ports:
+            - 8888:80
+            - 443:443
+        depends_on:
+            - phoenix
+            - front
+        environment:
+            FRONTEND_SERVER: ${FRONTEND_SERVER}
+            BACKEND_SERVER: ${BACKEND_SERVER}
+            PHOENIX_URI: ${PHOENIX_URI}
