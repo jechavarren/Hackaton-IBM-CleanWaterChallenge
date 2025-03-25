@@ -16,7 +16,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
-class DescribeWaterPipeline:
+class SendMessagesPipeline:
     """
     Pipeline to make a review of water analysis results.
     """
