@@ -4,8 +4,8 @@ from email.message import EmailMessage
 from io import BytesIO
 
 
-sender = "familiaechavarren@gmail.com"
-password = "Banneton" # uar contraseña de aplicación de gmail: app password https://myaccount.google.com/u/4/apppasswords
+sender = "cuenta@gmail.com"
+password = "contraseña" # uar contraseña de aplicación de gmail: app password https://myaccount.google.com/u/4/apppasswords
 receivers = ['javierechavarren11@gmail.com']
 subject = 'Technical Support Request'
 
