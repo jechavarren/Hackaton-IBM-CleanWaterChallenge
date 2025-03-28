@@ -37,10 +37,10 @@ class AnalyzeWaterDataPipeline:
                 Q3 = np.percentile(historical_df[element].dropna(), 75)
                 IQR = Q3 - Q1
                 
-                limite_inferior = Q1 - 1.5 * IQR
-                limite_superior = Q3 + 1.5 * IQR
-                umbral_inf = (Q2 + limite_inferior) / 2
-                umbral_sup = (Q2 + limite_superior) / 2
+                lower_limit = Q1 - 1.5 * IQR
+                upper_limit = Q3 + 1.5 * IQR
+                lower_threshold = (Q2 + lower_limit) / 2
+                upper_threshold = (Q2 + upper_limit) / 2
                 
                 data[f"{element}_min"] = Q1
                 data[f"{element}_max"] = Q3
@@ -48,7 +48,7 @@ class AnalyzeWaterDataPipeline:
             
             return pd.DataFrame([data])
         
-        def verificar_cumplimiento(row, param):
+        def verify_compliance(row, param):
             min_col = f"{param}_min"
             max_col = f"{param}_max"
             valor = row[param]
@@ -61,9 +61,9 @@ class AnalyzeWaterDataPipeline:
             df_merged = last_date_measurements_df.merge(df_thresholds, on="sampling_point_id")
             
             for param in columns_elements:
-                df_merged[f"{param}_alert"] = df_merged.apply(lambda row: verificar_cumplimiento(row, param), axis=1)
+                df_merged[f"{param}_alert"] = df_merged.apply(lambda row: verify_compliance(row, param), axis=1)
             
-            df_merged["Conclusión"] = df_merged[[f"{param}_alert" for param in columns_elements]].apply(lambda row: "OK" if all(row == "OK") else "KO", axis=1)
+            df_merged["Conclusion"] = df_merged[[f"{param}_alert" for param in columns_elements]].apply(lambda row: "OK" if all(row == "OK") else "KO", axis=1)
             return df_merged
         
         dfs_evaluate = []
@@ -77,11 +77,11 @@ class AnalyzeWaterDataPipeline:
         
         final_df_evaluate = pd.concat(dfs_evaluate, ignore_index=True)
         final_df_thresholds = pd.concat(dfs_thresholds, ignore_index=True)
-        conclusion = "OK" if (final_df_evaluate["Conclusión"] == "OK").all() else "KO"
+        conclusion = "OK" if (final_df_evaluate["Conclusion"] == "OK").all() else "KO"
         
         output = {
             "city": final_df_evaluate.iloc[0]['city'],
-            "deposito": final_df_evaluate.iloc[0]['sampling_point_name'],
+            "water_tank_name": final_df_evaluate.iloc[0]['sampling_point_name'],
             "alert": conclusion,
             "component": []
         }
