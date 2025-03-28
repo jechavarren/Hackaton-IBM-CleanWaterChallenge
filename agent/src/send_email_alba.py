@@ -1,15 +1,8 @@
-import json
 import logging
 import smtplib
 import ssl
 from email.message import EmailMessage
-from typing import Optional
 
-import pandas as pd
-from langchain_core.output_parsers import JsonOutputParser
-
-from .models import ModelFactory
-from .prompts import PromptFactory
 
 # Configure logging
 logging.basicConfig(

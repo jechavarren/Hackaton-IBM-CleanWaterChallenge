@@ -63,7 +63,7 @@ class CreateMessagesPipeline:
             params=self.params_dic
         )
         
-        # Obtener el prompt desde PromptFactory
+       
         prompt_data = PromptFactory.factory_method(domain="generate_body_email")[
             "generate_body_email"
         ]
