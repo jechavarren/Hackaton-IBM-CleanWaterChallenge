@@ -1,0 +1,18 @@
+{
+    "city": "Vitoria",
+    "water_tank_name": "Deposito 1",
+    "component": [
+      {
+        "name": "pH",
+        "upper_threshold": 8.5,
+        "lower_threshold": 6.5,
+        "current_value": 9.5
+      },
+      {
+        "name": "Turbidez",
+        "upper_threshold": 10,
+        "lower_threshold": 0,
+        "current_value": 15
+      }
+    ]
+  }
