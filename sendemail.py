@@ -4,10 +4,10 @@ from email.message import EmailMessage
 from io import BytesIO
 
 
-sender = "familiaechavarren@gmail.com"
-password = "Banneton" # uar contraseña de aplicación de gmail: app password https://myaccount.google.com/u/4/apppasswords
-receivers = ['javierechavarren11@gmail.com']
-subject = 'Technical Support Request'
+sender = "ibm.hackaton.ai@gmail.com"
+password = "zslv iafx oihh kbsm" # usar contraseña de aplicación de gmail: app password https://myaccount.google.com/u/4/apppasswords
+receivers = ['halbix@gmail.com']
+subject = 'Anomaly Detected in Water Tank Sensor Data'
 
 def SendEmail(body: str): 
     """
@@ -39,4 +39,4 @@ def SendEmail(body: str):
     print("Email successfully sent")
     return "Email successfully sent"
 
-SendEmail("test email")
+# SendEmail("test email")
