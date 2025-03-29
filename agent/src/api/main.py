@@ -34,7 +34,7 @@ def ping():
     return 200
 
 
-@api.post("/inference")
+@api.post("/execute_pipeline")
 def inference(
     request: InferenceRequest,
 ) -> InferenceResponse:

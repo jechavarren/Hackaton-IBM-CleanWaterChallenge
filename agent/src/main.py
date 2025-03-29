@@ -2,7 +2,7 @@ import os
 import uuid
 from typing import Dict
 
-from .describe_water_pipeline import DescribeWaterPipeline
+
 
 
 def dispatcher(
@@ -10,6 +10,6 @@ def dispatcher(
     metadata: Dict,
 ) -> Dict:
     
-    pipeline = DescribeWaterPipeline()    
+    pipeline = 1
 
     return pipeline.invoke(sampling_point)

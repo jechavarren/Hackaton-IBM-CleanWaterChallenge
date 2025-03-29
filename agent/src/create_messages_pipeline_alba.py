@@ -5,7 +5,7 @@ from langchain_ibm import WatsonxLLM
 from langchain.prompts import PromptTemplate
 
 # from .models import ModelFactory
-from .prompts import PromptFactory
+from prompts import PromptFactory
 
 
 
@@ -13,7 +13,7 @@ from .prompts import PromptFactory
 logging.basicConfig(
     # filename='app.log',
     filemode="a",
-    level=logging.ERROR,
+    level=logging.WARNING,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
@@ -55,6 +55,12 @@ class CreateMessagesPipeline:
             "stop_sequences": ["Vasco."]
         }
         
+        print(f"model_id:{'ibm/granite-3-8b-instruct'}")
+        print(f"url:{self.url}")
+        print(f"apikey:{self.watsonx_apikey}")
+        print(f"project_id:{self.project_id}")
+        print(f"params:{self.params_dic}")
+
         self.llm = WatsonxLLM(
             model_id='ibm/granite-3-8b-instruct',            
             url=self.url,
@@ -68,6 +74,8 @@ class CreateMessagesPipeline:
             "generate_body_email"
         ]
         self.prompt_template = prompt_data["PROMPT"]
+
+        print(f"prompt_template: {self.prompt_template}")
 
         logging.info("CreateMessagesPipeline inicialized correctly.")
 
@@ -102,6 +110,16 @@ class CreateMessagesPipeline:
         except Exception as e:
             logging.error(f"Error creating email: {str(e)}")
             return {"error": "Failed to create email"}
+        
+## Tests
+import json
+
+pipeline = CreateMessagesPipeline()
+
+with open('data/water_data.json', 'r') as f:
+    data = json.load(f)
+
+print(pipeline.create_messages(data))
         
 
 
