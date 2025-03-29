@@ -1,11 +1,8 @@
+import os
+from dotenv import load_dotenv
 import json
 import logging
-import pandas as pd
-from typing import Literal, Optional
-from langchain_core.output_parsers import JsonOutputParser
-
-from src.models import ModelFactory
-from src.prompts import PromptFactory
+from langchain_community.utilities import SerpAPIWrapper
 
 
 # Configure logging
@@ -22,35 +19,38 @@ class CreateMessagesPipeline:
     """
 
     def __init__(self):
+
+        load_dotenv()
         
-        model_gpt4 = ModelFactory.factory_method(
-            temperature=0.0,
-            model="gpt-4",
+        self.search = SerpAPIWrapper(serpapi_api_key=os.getenv("SERPAPI_API_KEY"))
+        
+        from langchain_core.tools import Tool
+
+        # Tool to pass to an agent
+        self.google_tool = Tool(
+            name="google-search",
+            description="Search Google for recent results",
+            func=self.search.run,
         )
 
-        prompt = PromptFactory.factory_method(
-            domain="describe_water_data",
-        )[
-            "describe_water_data"
-        ]["PROMPT"]
-
-        self.analysis_chain = prompt | model_gpt4
-        
-        logging.info("DescribeWaterGPT initialized successfully.")
+        logging.info("Email discovery agent initialized")
 
 
     def invoke(
         self,
-        water_info: str
+        municipality: str
     ) -> str:
         """
         Creates the message
         """
+        search = SerpAPIWrapper()
+        email = search.run(f"Cual es el email del ayuntamiento de {municipality}?")
 
-        response = self.analysis_chain.invoke(
-            {
-                "water_data": water_info
-            }
-        )
+        return email
+    
 
-        return response
+## Test
+pipeline = CreateMessagesPipeline()
+
+print(pipeline.invoke("Lezo"))
+

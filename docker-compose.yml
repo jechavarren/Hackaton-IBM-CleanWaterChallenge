@@ -5,8 +5,8 @@ services:
           context: ./agent
         image: registry/agent:latest
         container_name: agent
-        depends_on:
-            - phoenix
+        # depends_on:
+        #     - phoenix
         restart: always
         ports:
             - 8000:8000
@@ -44,16 +44,16 @@ services:
         ports:
             - 6006:6006
             - 9090:9090
-        environment:
-            PHOENIX_SQL_DATABASE_URL: ${PHOENIX_SQL_DATABASE_URL}
+        # environment:
+        #     PHOENIX_SQL_DATABASE_URL: ${PHOENIX_SQL_DATABASE_URL}
 
-    db:
-        image: postgres
-        restart: always
-        container_name: db
-        environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: phoenix
-        ports:
-            - 5432:5432
+    # db:
+    #     image: postgres
+    #     restart: always
+    #     container_name: db
+    #     environment:
+    #         POSTGRES_USER: postgres
+    #         POSTGRES_PASSWORD: postgres
+    #         POSTGRES_DB: phoenix
+    #     ports:
+    #         - 5432:5432
