@@ -111,15 +111,7 @@ class CreateMessagesPipeline:
             logging.error(f"Error creating email: {str(e)}")
             return {"error": "Failed to create email"}
         
-## Tests
-import json
 
-pipeline = CreateMessagesPipeline()
-
-with open('data/water_data.json', 'r') as f:
-    data = json.load(f)
-
-print(pipeline.create_messages(data))
         
 
 

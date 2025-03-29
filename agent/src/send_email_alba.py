@@ -11,7 +11,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
-class CreateMessagesPipeline:
+class SendEmailPipeline:
     """
     This pipeline sends an email with the provided body text to a list of receivers.
     """
@@ -19,7 +19,7 @@ class CreateMessagesPipeline:
     def __init__(self):
         self.sender_email = "ibm.hackaton.ai@gmail.com"
         self.app_password = "zslv iafx oihh kbsm" 
-        self.receivers = ["citycouncilspain@gmail.com"]
+        self.receivers = ["citycouncilspain@gmail.com", "javierechavarren11@gmail.com"]
         self.subject = "Anomaly Detected in Water Tank Sensor Data"
         
 
@@ -45,6 +45,8 @@ class CreateMessagesPipeline:
                     del msg["To"]
 
             logging.info("Email successfully sent.")
+            return {"message" :"Email successfully sent."}
+        
         except Exception as e:
             logging.error(f"Failed to send email: {e}")
 
@@ -58,3 +60,8 @@ class CreateMessagesPipeline:
     #     self.send_email(response)
 
     #     return response
+
+##Test
+# pipeline = CreateMessagesPipeline()
+
+# pipeline.send_email("Hola Caracola sábado a las 12:20")

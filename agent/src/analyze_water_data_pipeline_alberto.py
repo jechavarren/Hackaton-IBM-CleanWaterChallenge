@@ -5,8 +5,8 @@ import numpy as np
 from typing import Literal, Optional
 from langchain_core.output_parsers import JsonOutputParser
 
-from .models import ModelFactory
-from .prompts import PromptFactory
+from models import ModelFactory
+from prompts import PromptFactory
 
 
 # Configure logging
@@ -105,3 +105,10 @@ class AnalyzeWaterDataPipeline:
         except Exception as e:
             logging.error(f"Error processing water data: {str(e)}")
             return {"error": "Failed to analyze water data"}
+        
+    def sample_analyze_water_data(self):
+
+        with open('data/water_data.json', 'r') as f:
+            data = json.load(f)
+
+        return data
