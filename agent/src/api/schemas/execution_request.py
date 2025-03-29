@@ -10,11 +10,11 @@ class InferenceMessage(BaseModel):
     metadata: dict = {}
 
 
-class InferenceRequest(InferenceMessage):
-    message: str 
-    metadata: dict 
+class ExecutionRequest(BaseModel):
+    sampling_point: str = '123'
+    metadata: dict = {}
 
 
-class InferenceResponse(InferenceMessage):
-    message: str 
-    metadata: dict 
+class ExecutionResponse(BaseModel):
+    message: str = "Ejecución correcta"
+    metadata: dict = {}

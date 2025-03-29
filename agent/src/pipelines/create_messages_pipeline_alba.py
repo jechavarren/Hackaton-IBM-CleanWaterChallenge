@@ -5,9 +5,7 @@ from langchain_ibm import WatsonxLLM
 from langchain.prompts import PromptTemplate
 
 # from .models import ModelFactory
-from prompts import PromptFactory
-
-
+from src.prompts import PromptFactory
 
 # Configure logging
 logging.basicConfig(

@@ -4,8 +4,8 @@ import pandas as pd
 from typing import Literal, Optional
 from langchain_core.output_parsers import JsonOutputParser
 
-from models import ModelFactory
-from prompts import PromptFactory
+from src.models import ModelFactory
+from src.prompts import PromptFactory
 
 
 # Configure logging

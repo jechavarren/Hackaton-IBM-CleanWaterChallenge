@@ -1,4 +1,4 @@
 from .feedback_request import FeedbackRequest
-from .inference_message import InferenceMessage
-from .inference_message import InferenceRequest
-from .inference_message import InferenceResponse
+from .execution_request import InferenceMessage
+from .execution_request import ExecutionRequest
+from .execution_request import ExecutionResponse

@@ -3,15 +3,15 @@ import json
 import logging
 import pandas as pd
 from typing import Dict
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from openinference.semconv.trace import SpanAttributes
 from openinference.semconv.trace import OpenInferenceSpanKindValues
 from phoenix.trace import SpanEvaluations
 
 from src import dispatcher
 from .schemas import FeedbackRequest
-from .schemas import InferenceRequest
-from .schemas import InferenceResponse
+from .schemas import ExecutionRequest
+from .schemas import ExecutionResponse
 
 if os.getenv("PHOENIX_URI"):
     from src import client
@@ -29,37 +29,41 @@ logging.basicConfig(
 api = FastAPI()
 
 
-@api.get("/ping")
-def ping():
-    return 200
+@api.get("/health", status_code=status.HTTP_200_OK, response_model=Dict[str, str])
+async def health_check():
+    """
+    Health check endpoint.
+    Returns 200 OK when the service is running properly.
+    """
+    return {"status": "ok"}
 
 
 @api.post("/execute_pipeline")
 def inference(
-    request: InferenceRequest,
-) -> InferenceResponse:
+    request: ExecutionRequest,
+) -> ExecutionResponse:
 
     try:
-        response = dispatcher(message = request.message,
+        response = dispatcher(sampling_point = request.sampling_point,
                               metadata = request.metadata)
 
 
         logger.info(
-            f"Message {request.message} "
+            f"Sampling Point {request.sampling_point} "
             f"Medatadata {request.metadata} "
             f"Response: {response} ",
         )
-        return InferenceResponse(**response)
+        return ExecutionResponse(**response)
 
     except Exception as error:
 
         logger.error(
             f"Error {error} in requests:"
-            f"Message {request.message} "
+            f"Sampling Point {request.sampling_point} "
             f"Medatadata {request.metadata} ",
         )
 
-        return InferenceResponse(
+        return ExecutionResponse(
             message="Lo siento, ha habido un error en el sistema",
             metadata={"error": str(error)},
         )
@@ -107,17 +111,3 @@ def feedback(
 def metadata() -> list:
     return []
 
-
-@api.get("/chains")
-def chains() -> list:
-    return []
-
-
-@api.get("/examples")
-def examples() -> list[tuple[InferenceRequest, InferenceResponse]]:
-    return [
-        (
-            InferenceRequest(),
-            InferenceResponse(),
-        ),
-    ]
