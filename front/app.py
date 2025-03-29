@@ -30,27 +30,42 @@ load_dotenv()
 logger.info(f"Environment variables: {os.environ}")
 
 
-def response_generator(
-    body: Dict,
-    api_endpoint: str,
-):
+# def response_generator(
+#     body: Dict,
+#     api_endpoint: str,
+# ):
+#     try:
+#         s = requests.Session()
+#         with s.post(
+#             api_endpoint,
+#             json=body,
+#             headers=None,
+#             stream=True,
+#         ) as response:
+#             logger.info(f"Agent service call: Success ")
+
+#             content = json.loads(response.content)
+
+#             return content
+
+#     except Exception as error:
+#         logger.error(f"Agent service call: Fail {error} {api_endpoint} {body}")
+
+
+
+def trigger_full_process():
     try:
-        s = requests.Session()
-        with s.post(
-            api_endpoint,
-            json=body,
-            headers=None,
-            stream=True,
-        ) as response:
-            logger.info(f"Agent service call: Success ")
-
-            content = json.loads(response.content)
-
-            return content
-
-    except Exception as error:
-        logger.error(f"Agent service call: Fail {error} {api_endpoint} {body}")
-
+        funcion_main = "execute_pipeline"
+        # Ajusta la URL según tu configuración de red/puerto
+        response = requests.post(f'http://localhost:8000/{funcion_main}')
+        response_data = response.json()
+        
+        if response_data['status'] == 'OK':
+            st.success("Proceso completado exitosamente")
+        else:
+            st.error(f"Error en el proceso: {response_data['message']}")
+    except Exception as e:
+        st.error(f"Error de conexión: {e}")
 
 
 st.set_page_config(
@@ -100,14 +115,35 @@ right: {styles.toolbar_right};
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
 st.markdown(
-    f"<h1 style='color: {text_styles.h1_color}; font-size: {text_styles.h1_font_size}; text-align: left;'>El Agua de tu zona</h1>",
+    f"<h1 style='color: {text_styles.h1_color}; font-size: {text_styles.h1_font_size}; text-align: left;'>Anomaly Detction in Water Tank Sensor Data in the Basque Country</h1>",
     unsafe_allow_html=True)
 for k in list(range(2)):
     st.write("")
 st.markdown(f"""
     <div style='background-color: rgba(102, 102, 102, 0.5); padding: 20px; border-radius: 10px;'>
-        <p style='color: {text_styles.text_color}; font-size: {text_styles.text_font_size};'>Agente construido con inteligencia artificial generativa, capaz de analizar la calidad del agua de un punto, utilizando datos abiertos. </p>
+        <p style='color: {text_styles.text_color}; font-size: {text_styles.text_font_size};'>Agent built with generative Artificial Intelligence, able to analyse water measurements in a water tank, using data every 15 minutes. It is capable of detect anomalou measurements and send an email to the correspondent council.</p>
     </div>              
 """, unsafe_allow_html=True)
 
-st.write("")
+
+if st.button(
+    "Initialize the complete analysis", 
+    key="trigger_process_btn",
+    type="primary"
+):
+    
+    trigger_full_process()
+    st.markdown("""
+        <style>
+            .custom-text {
+                background-color: rgba(0, 0, 0, 0.6);
+                color: white;
+                padding: 20px;
+                border-radius: 10px;
+                font-size: 22px;
+                text-align: center;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+    
+    st.markdown('<div class="custom-text">Process completed</div>', unsafe_allow_html=True)

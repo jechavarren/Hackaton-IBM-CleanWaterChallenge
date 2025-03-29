@@ -23,6 +23,6 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8000,
         root_path="",
-        workers=int(os.getenv("WORKERS", 1)),
+        #workers=int(os.getenv("WORKERS", 1)),
         lifespan="on",
     )
