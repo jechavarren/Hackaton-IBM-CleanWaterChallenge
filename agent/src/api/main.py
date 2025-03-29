@@ -64,9 +64,13 @@ def inference(
         )
 
         return ExecutionResponse(
-            message="Lo siento, ha habido un error en el sistema",
+            message="Sorry, there was an error in the system.",
             metadata={"error": str(error)},
         )
+
+@api.get("/test")
+async def test_endpoint():
+    return {"status": "OK", "message": "FastAPI está funcionando correctamente"}
 
 
 @api.post("/feedback")

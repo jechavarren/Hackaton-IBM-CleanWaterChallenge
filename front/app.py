@@ -57,19 +57,23 @@ def trigger_full_process():
     try:
         funcion_main = "execute_pipeline"
         # Ajusta la URL según tu configuración de red/puerto
-        response = requests.post(f'http://localhost:8000/{funcion_main}')
+        response = requests.post(f'http://agent:8000/{funcion_main}')
         response_data = response.json()
+
+        if 'error' in response_data['metadata']:
+            error_message = response_data['metadata']['error']
+            return f"Connection error: {error_message}"
         
         if response_data['status'] == 'OK':
-            st.success("Proceso completado exitosamente")
+            return "Process completed successfully!"
         else:
-            st.error(f"Error en el proceso: {response_data['message']}")
+            return f"Error in the process: {response_data['message']}"
     except Exception as e:
-        st.error(f"Error de conexión: {e}")
+        return "Conecction error: {e}"
 
 
 st.set_page_config(
-    page_title="Analiza tu Agua",
+    page_title="Water Measurements Analysis",
     page_icon=":robot_face:",
     layout="centered",
     initial_sidebar_state="collapsed"
@@ -115,7 +119,7 @@ right: {styles.toolbar_right};
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
 st.markdown(
-    f"<h1 style='color: {text_styles.h1_color}; font-size: {text_styles.h1_font_size}; text-align: left;'>Anomaly Detction in Water Tank Sensor Data in the Basque Country</h1>",
+    f"<h1 style='color: {text_styles.h1_color}; font-size: {text_styles.h1_font_size}; text-align: left;'>Anomaly Detection in Water Tank Sensor Data in the Basque Country</h1>",
     unsafe_allow_html=True)
 for k in list(range(2)):
     st.write("")
@@ -132,7 +136,7 @@ if st.button(
     type="primary"
 ):
     
-    trigger_full_process()
+    result_message = trigger_full_process()
     st.markdown("""
         <style>
             .custom-text {
@@ -146,4 +150,43 @@ if st.button(
         </style>
         """, unsafe_allow_html=True)
     
-    st.markdown('<div class="custom-text">Process completed</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="custom-text">{result_message}</div>', unsafe_allow_html=True)
+
+
+def test_backend_connection():
+    try:
+        # Usa la URL del contenedor de FastAPI
+        backend_url = "http://agent:8000"  # 'agent' es el nombre del contenedor de FastAPI
+        
+        # Hacer una solicitud GET al endpoint de prueba
+        response = requests.get(f'{backend_url}/test')
+        
+        if response.status_code == 200:
+            response_data = response.json()
+            if response_data["status"] == "OK":
+                return "Successful conection!"
+            else:
+                st.error(f"Error en la respuesta: {response_data.get('message', 'Sin mensaje')}")
+        else:
+            st.error(f"Error en la solicitud: {response.status_code}")
+    
+    except Exception as e:
+        st.error(f"Error de conexión: {e}")
+
+
+# Prueba de conexion
+if st.button("Probar conexión con FastAPI"):
+    result_message = test_backend_connection()
+    st.markdown("""
+        <style>
+            .custom-text {
+                background-color: rgba(0, 0, 0, 0.6);
+                color: white;
+                padding: 20px;
+                border-radius: 10px;
+                font-size: 22px;
+                text-align: center;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+    st.markdown(f'<div class="custom-text">{result_message}</div>', unsafe_allow_html=True)

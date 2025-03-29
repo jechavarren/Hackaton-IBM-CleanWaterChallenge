@@ -34,7 +34,7 @@ services:
         ports:
             - 8002:8002
         environment:
-            BACKEND_SERVER: ${BACKEND_SERVER}
+            BACKEND_SERVER: http://agent:8000
 
     phoenix:
         image: arizephoenix/phoenix:version-4.4.3
